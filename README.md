@@ -4,7 +4,7 @@
 
 # SIMLIB
 
-- download http://www.fit.vutbr.cz/~peringer/SIMLIB/source/ | or extract archiv (version simlib-3.07-20181019.tar.gz included in repository)
+- download http://www.fit.vutbr.cz/~peringer/SIMLIB/source/ | or extract archiv (version simlib-3.07-20181019.tar.gz is included in repository)
 - cd /extracted_archiv
 - make
 - sudo make install
