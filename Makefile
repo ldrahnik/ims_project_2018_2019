@@ -35,7 +35,7 @@ run: ./project
 # TODO: experiments with set of specific arguments
 
 
-################# ARCHIV ##########################
+################# ARCHIVE ##########################
 
 ANAME = 01_xbezde13_xdrahn00
 ATYPE = zip
