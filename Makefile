@@ -26,8 +26,13 @@ clean: rm -f $(PNAME) $(AFULLNAME) *.out
 $(PNAME): $(PSOURCES)
 	$(CC) $(CFLAGS) $(PSOURCES) $(PFLAGS)
 
+run: ./project 
+
+# TODO: arguments + or empty args means use defaults (+)
+
 ################# EXPERIMENTS #####################
 
+# TODO: experiments with set of specific arguments
 
 
 ################# ARCHIV ##########################
