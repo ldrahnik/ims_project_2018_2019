@@ -32,14 +32,16 @@ long novy_pacient = 0;
 long odmitnut = 0;
 long prijmuti = 0;
 long v_cekarne = 0;
+long pred_zakrokem = 0;
 
 
-
-class Enter : public Process
+class Vstup : public Process
 {
 	void Behavior()
 	{
 		novy_pacient++;
+
+		hovor:
 
 		Enter(Sestricky, 1);
 
@@ -56,17 +58,36 @@ class Enter : public Process
 			if(Random() > 0.15)
 			{
 				v_cekarne++;
+				Enter(Sestricky, 1);
+				Seize(Rentgen);
+				Wait(Exponential(0.25));
+				Release(Rentgen);
+				Leave(Sestricky, 1);
+				Wait(Exponential(0.58333333));
 			}
 			else
 			{
 				Leave(Kapacita_navstev, 1);
-				goto exit;
+				goto vystup;
 			}
 		}
 		else
 		{
-
+			odmitnut++;
+			if(Random() > 0.5)
+			{
+				Wait(Exponential(120));
+				goto hovor;
+			}
+			else
+				goto vystup;
 		}
+
+		zakrok:
+
+		Enter(Sestricky, 1);
+		Enter(Kresla, 1)
+
 	}
 };
 
@@ -74,14 +95,13 @@ class Generator : public Event
 {
 	void Behavior()
 	{
-		(new Enter)->Activate();
+		(new Vstup)->Activate();
 		Activate(Time + Exponential(NOVY_PACIENT));
 	}
 };
 
-int main(int argc, char *argv[])
+int main()
 {
-	#if DEBUG
-		Print("Hello World\n");
-	#endif
+
+	return 0;
 }
