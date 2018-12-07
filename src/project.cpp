@@ -85,6 +85,7 @@ class Vstup : public Process
 
 		zakrok:
 
+		pred_zakrokem++;
 		Enter(Sestricky, 1);
 		Enter(Kresla, 1);
 
