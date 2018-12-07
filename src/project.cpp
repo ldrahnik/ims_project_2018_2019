@@ -42,6 +42,8 @@ long lehky_zakrok = 0;
 long konec = 0;
 long hned_objednani = 0;
 long hned_neobjednani = 0;
+long neobjednan = 0;
+long objednan = 0;
 
 class Siesta : public Process
 {
@@ -142,11 +144,43 @@ bez_placeni:
 			hned_neobjednani++;
 			Leave(Sestricky, 1);
 			Enter(Stali_pacienti, 1);
+			goto ceka_termin;
 		}
 		else
 		{
 			hned_objednani++;
 			Wait(Exponential(0.16666667));
+			Leave(Sestricky, 1);
+		}
+
+		Wait(Exponential(2190));
+objednava_se:
+		Enter(Sestricky, 1);
+		Wait(Exponential(0.00833333));
+		Leave(Sestricky, 1);
+
+		if(!Kapacita_navstev.Empty())
+		{
+			objednan++;
+			Enter(Kapacita_navstev, 1);
+ceka_termin:
+			Wait(Exponential(2160));
+			Leave(Kapacita_navstev, 1);
+			/**
+			 *
+			 */
+
+		}
+		else
+		{
+			neobjednan++;
+			if(Random() < 0.01)
+			goto vystup;
+			else
+			{
+				Wait(Exponential(120));
+				goto objednava_se;
+			}
 		}
 vystup:
 		konec++;
