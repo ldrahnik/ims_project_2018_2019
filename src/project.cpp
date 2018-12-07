@@ -89,6 +89,7 @@ class Vstup : public Process
 		Enter(Kresla, 1);
 
 		vystup:
+		Leave(Kapacita_navstev, 1);
 
 	}
 };
