@@ -33,6 +33,52 @@ long odmitnut = 0;
 long prijmuti = 0;
 long v_cekarne = 0;
 
+
+
+class Enter : public Process
+{
+	void Behavior()
+	{
+		novy_pacient++;
+
+		Enter(Sestricky, 1);
+
+		Wait(Exponential(0.03333333));
+
+		Leave(Sestricky, 1);
+
+		if(!Kapacita_navstev.Empty())
+		{
+			Enter(Kapacita_navstev, 1);
+			prijmuti++;
+			Wait(Exponential(2160));
+
+			if(Random() > 0.15)
+			{
+				v_cekarne++;
+			}
+			else
+			{
+				Leave(Kapacita_navstev, 1);
+				goto exit;
+			}
+		}
+		else
+		{
+
+		}
+	}
+};
+
+class Generator : public Event
+{
+	void Behavior()
+	{
+		(new Enter)->Activate();
+		Activate(Time + Exponential(NOVY_PACIENT));
+	}
+};
+
 int main(int argc, char *argv[])
 {
 	#if DEBUG
