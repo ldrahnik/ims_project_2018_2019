@@ -46,7 +46,7 @@ zip:
 	zip $(AFULLNAME) $(AFILES)
 
 rmzip:
-	rm -f $(ZIP_NAME).zip
+	rm -f $(AFULLNAME)
 
 ################# LATEX ###########################
 
