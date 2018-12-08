@@ -31,7 +31,7 @@
 
 #define NOVY_PACIENT 8
 
-#define RUNTIME 3650
+#define RUNTIME 10
 
 Store Sestricky("Sestricky", SESTRICKY);
 Store Zubari("Zubari", ZUBARI);
@@ -40,6 +40,8 @@ Store Kapacita_registraci("Kapacita registraci", KAPACITA_REGISTRACI);
 Store Kapacita_navstev("Kapacita navstev", KAPACITA_NAVSTEV);
 
 Facility Rentgen("Rentgen");
+
+Histogram cekarna_rtg("Pacient ceka na rentgen", 0, 1, 20);
 
 unsigned long novy_pacient = NOVY_PACIENT;
 
@@ -57,6 +59,7 @@ unsigned long hned_neobjednani = 0;
 unsigned long neobjednan = 0;
 unsigned long objednan = 0;
 unsigned long stali = 0;
+unsigned long neprisel = 0;
 
 class Siesta : public Process
 {
@@ -72,6 +75,8 @@ class Vstup : public Process
 {
 	void Behavior()
 	{
+		double begin_cekarna_rtg;
+		double start = Time;
 		double rand = 0;
 		novy++;
 
@@ -91,9 +96,11 @@ hovor:
 
 			if(Random() > 0.15)
 			{
+				begin_cekarna_rtg = Time;
 				v_cekarne++;
 				Enter(Sestricky, 1);
 				Seize(Rentgen);
+				cekarna_rtg(Time - begin_cekarna_rtg);
 				Wait(Exponential(0.25));
 				Release(Rentgen);
 				Leave(Sestricky, 1);
@@ -130,6 +137,7 @@ zakrok:
 			tezky_zakrok++;
 			Wait(Exponential(0.83333333));
 			Leave(Kresla, 1);
+			Leave(Sestricky, 1);
 		}
 		else if(rand < 0.5)
 		{
@@ -226,7 +234,7 @@ int main(int argc, char *argv[])
 	unsigned long kresla = KRESLA;
 	unsigned long registrace = KAPACITA_REGISTRACI;
 	unsigned long navstevy = KAPACITA_NAVSTEV;
-	unsigned long runtime = RUNTIME DEN;
+	unsigned long runtime = RUNTIME ROK;
 	std::string filename = "output.out";
 
 	while((opt = getopt(argc, argv, "s:z:k:r:n:i:o:t:")) != -1)
@@ -255,7 +263,7 @@ int main(int argc, char *argv[])
 				filename = optarg;
 				break;
 			case 't':
-				runtime = (static_cast<unsigned long>(std::atol(optarg)) DEN);
+				runtime = (static_cast<unsigned long>(std::atol(optarg)) ROK);
 				break;
 			default:
 				break;
@@ -278,6 +286,9 @@ int main(int argc, char *argv[])
 
 	Print("Runtime: %d\n", runtime);
 	Print("Novych Pacientu: %d\n", novy);
+	Print("V cekarne na rtg: %d\n", v_cekarne);
+
+	cekarna_rtg.Output();
 
 	Sestricky.Output();
 	Zubari.Output();
