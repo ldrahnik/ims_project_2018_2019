@@ -41,7 +41,8 @@ Store Kapacita_navstev("Kapacita navstev", KAPACITA_NAVSTEV);
 
 Facility Rentgen("Rentgen");
 
-Histogram cekarna_rtg("Pacient ceka na rentgen", 0, 1, 20);
+Histogram cekarna_rtg("Pacient ceka na rentgen", 0, 5, 20);
+Histogram cekarna_zakrok("Pacient ceka na zakrok", 0, 5, 20);
 
 unsigned long novy_pacient = NOVY_PACIENT;
 
@@ -75,7 +76,7 @@ class Vstup : public Process
 {
 	void Behavior()
 	{
-		double begin_cekarna_rtg;
+		double begin_time;
 		double start = Time;
 		double rand = 0;
 		novy++;
@@ -96,11 +97,11 @@ hovor:
 
 			if(Random() > 0.15)
 			{
-				begin_cekarna_rtg = Time;
+				begin_time = Time;
 				v_cekarne++;
 				Enter(Sestricky, 1);
 				Seize(Rentgen);
-				cekarna_rtg(Time - begin_cekarna_rtg);
+				cekarna_rtg((Time - begin_time)*60);
 				Wait(Exponential(0.25));
 				Release(Rentgen);
 				Leave(Sestricky, 1);
@@ -124,10 +125,11 @@ hovor:
 		}
 
 zakrok:
-
+		begin_time = Time;
 		pred_zakrokem++;
 		Enter(Sestricky, 1);
 		Enter(Kresla, 1);
+		cekarna_zakrok((Time - begin_time)*60);
 		rand = Random();
 
 		if(rand < 0.2)
@@ -287,8 +289,10 @@ int main(int argc, char *argv[])
 	Print("Runtime: %d\n", runtime);
 	Print("Novych Pacientu: %d\n", novy);
 	Print("V cekarne na rtg: %d\n", v_cekarne);
+	Print("V cekarne na zakrok: %d\n", pred_zakrokem);
 
 	cekarna_rtg.Output();
+	cekarna_zakrok.Output();
 
 	Sestricky.Output();
 	Zubari.Output();
