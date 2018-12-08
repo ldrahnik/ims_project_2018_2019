@@ -7,6 +7,17 @@
 
 #include "simlib.h"
 #include <iostream>
+#include <getopt.h>
+#include <stdio.h>
+#include <cstdlib>
+
+#define DEN * 24
+
+#define MESIC * 730
+
+#define ROK * 8760
+
+#define MINUT / 60
 
 #define SESTRICKY 3
 
@@ -18,32 +29,33 @@
 
 #define KAPACITA_NAVSTEV 1000
 
-#define STALI_PACIENTI 1000
-
 #define NOVY_PACIENT 8
+
+#define RUNTIME 365
 
 Store Sestricky("Sestricky", SESTRICKY);
 Store Zubari("Zubari", ZUBARI);
 Store Kresla("Kresla", KRESLA);
 Store Kapacita_registraci("Kapacita registraci", KAPACITA_REGISTRACI);
 Store Kapacita_navstev("Kapacita navstev", KAPACITA_NAVSTEV);
-Store Stali_pacienti("Stali pacienti", STALI_PACIENTI);
 
 Facility Rentgen("Rentgen");
 
-long novy_pacient = 0;
-long odmitnut = 0;
-long prijmuti = 0;
-long v_cekarne = 0;
-long pred_zakrokem = 0;
-long prohlidka = 0;
-long tezky_zakrok = 0;
-long lehky_zakrok = 0;
-long konec = 0;
-long hned_objednani = 0;
-long hned_neobjednani = 0;
-long neobjednan = 0;
-long objednan = 0;
+unsigned long novy_pacient = NOVY_PACIENT;
+
+unsigned long novy = 0;
+unsigned long odmitnut = 0;
+unsigned long prijmuti = 0;
+unsigned long v_cekarne = 0;
+unsigned long pred_zakrokem = 0;
+unsigned long prohlidka = 0;
+unsigned long tezky_zakrok = 0;
+unsigned long lehky_zakrok = 0;
+unsigned long konec = 0;
+unsigned long hned_objednani = 0;
+unsigned long hned_neobjednani = 0;
+unsigned long neobjednan = 0;
+unsigned long objednan = 0;
 
 class Siesta : public Process
 {
@@ -60,17 +72,16 @@ class Vstup : public Process
 	void Behavior()
 	{
 		double rand = 0;
-		novy_pacient++;
+		novy++;
 
 hovor:
 
 		Enter(Sestricky, 1);
 
 		Wait(Exponential(0.03333333));
-
 		Leave(Sestricky, 1);
 
-		if(!Kapacita_registraci.Empty())
+		if(!Kapacita_registraci.Full())
 		{
 			Enter(Kapacita_registraci, 1);
 			prijmuti++;
@@ -109,7 +120,6 @@ zakrok:
 		pred_zakrokem++;
 		Enter(Sestricky, 1);
 		Enter(Kresla, 1);
-
 		rand = Random();
 
 		if(rand < 0.2)
@@ -131,51 +141,59 @@ zakrok:
 		}
 		else
 		{
+			Enter(Zubari, 1);
 			lehky_zakrok++;
 			Wait(Exponential(0.5));
 			Leave(Kresla, 1);
 		}
 		(new Siesta)->Activate();
+
 		Wait(Exponential(0.08333333));
 bez_placeni:
-
+		Wait(Exponential(0.08333333));
 		if(Random() < 0.2)
 		{
 			hned_neobjednani++;
 			Leave(Sestricky, 1);
-			Enter(Stali_pacienti, 1);
-			goto ceka_termin;
+			stali++;
 		}
 		else
 		{
+			Enter(Kapacita_navstev, 1);
 			hned_objednani++;
 			Wait(Exponential(0.16666667));
 			Leave(Sestricky, 1);
+			goto ceka_termin;
 		}
-
+		if(Random() < 0.005)
+			goto vystup;
 		Wait(Exponential(2190));
 objednava_se:
 		Enter(Sestricky, 1);
 		Wait(Exponential(0.00833333));
 		Leave(Sestricky, 1);
 
-		if(!Kapacita_navstev.Empty())
+		if(!Kapacita_navstev.Full())
 		{
 			objednan++;
 			Enter(Kapacita_navstev, 1);
 ceka_termin:
 			Wait(Exponential(2160));
 			Leave(Kapacita_navstev, 1);
-			/**
-			 *
-			 */
+			rand = Random();
+			if(rand < 0.01)
+				goto vystup;
+			else if(rand < 0.09)
+				goto objednava_se;
+			else
+				goto zakrok;
 
 		}
 		else
 		{
 			neobjednan++;
-			if(Random() < 0.01)
-			goto vystup;
+			if (Random() < 0.01)
+				goto vystup;
 			else
 			{
 				Wait(Exponential(120));
@@ -184,6 +202,7 @@ ceka_termin:
 		}
 vystup:
 		konec++;
+		stali--;
 
 	}
 };
@@ -193,12 +212,74 @@ class Generator : public Event
 	void Behavior()
 	{
 		(new Vstup)->Activate();
-		Activate(Time + Exponential(NOVY_PACIENT));
+		Activate(Time + Exponential(novy_pacient));
 	}
 };
 
-int main()
+int main(int argc, char *argv[])
 {
+	int opt;
 
-	return 0;
+	unsigned long sestricky = SESTRICKY;
+	unsigned long zubari = ZUBARI;
+	unsigned long kresla = KRESLA;
+	unsigned long registrace = KAPACITA_REGISTRACI;
+	unsigned long navstevy = KAPACITA_NAVSTEV;
+	unsigned long runtime = RUNTIME DEN;
+	std::string filename = "output.out";
+
+	while((opt = getopt(argc, argv, "s:z:k:r:n:i:o:t:")) != -1)
+	{
+		switch(opt)
+		{
+			case 's':
+				sestricky = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'z':
+				zubari = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'k':
+				kresla = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'r':
+				registrace = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'n':
+				navstevy = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'i':
+				novy_pacient = static_cast<unsigned long>(std::atol(optarg));
+				break;
+			case 'o':
+				filename = optarg;
+				break;
+			case 't':
+				runtime = (static_cast<unsigned long>(std::atol(optarg)) DEN);
+				break;
+			default:
+				break;
+		}
+	}
+
+	Sestricky.SetCapacity(sestricky);
+	Zubari.SetCapacity(zubari);
+	Kresla.SetCapacity(kresla);
+	Kapacita_registraci.SetCapacity(registrace);
+	Kapacita_navstev.SetCapacity(navstevy);
+
+	SetOutput(filename.c_str());
+
+	Init(0, runtime);
+
+	(new Generator)->Activate();
+
+	Run();
+
+	Sestricky.Output();
+	Zubari.Output();
+	Kresla.Output();
+	Kapacita_registraci.Output();
+	Kapacita_navstev.Output();
+
+	return EXIT_SUCCESS;
 }
