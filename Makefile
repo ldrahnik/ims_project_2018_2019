@@ -24,7 +24,7 @@ rebuild: clean all
 clean: rm -f $(PNAME) $(AFULLNAME) *.out
 
 $(PNAME): $(PSOURCES)
-	$(CC) $(CFLAGS) $(PSOURCES) $(PFLAGS)
+	$(CC) $(CFLAGS) $(PSOURCES) $(PFLAGS) -o ./$(PNAME)
 
 run: ./project 
 

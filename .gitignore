@@ -1,4 +1,7 @@
 *.out
 .idea/*
+./project
+
+# CLion
 CMakeLists.txt
 cmake-build-debug/*
