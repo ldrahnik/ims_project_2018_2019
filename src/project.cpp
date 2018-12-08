@@ -31,7 +31,7 @@
 
 #define NOVY_PACIENT 8
 
-#define RUNTIME 365
+#define RUNTIME 3650
 
 Store Sestricky("Sestricky", SESTRICKY);
 Store Zubari("Zubari", ZUBARI);
@@ -56,6 +56,7 @@ unsigned long hned_objednani = 0;
 unsigned long hned_neobjednani = 0;
 unsigned long neobjednan = 0;
 unsigned long objednan = 0;
+unsigned long stali = 0;
 
 class Siesta : public Process
 {
@@ -274,6 +275,9 @@ int main(int argc, char *argv[])
 	(new Generator)->Activate();
 
 	Run();
+
+	Print("Runtime: %d\n", runtime);
+	Print("Novych Pacientu: %d\n", novy);
 
 	Sestricky.Output();
 	Zubari.Output();
