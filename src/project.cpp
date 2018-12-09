@@ -191,8 +191,7 @@ bez_placeni:
 		Wait(Exponential(6 MESIC));		//doba nez se stavajici pacient opet objedna
 
 objednava_se:
-
-		stal_obj++;
+		
 		start_sestricka = Time;
 		Enter(Sestricky, 1);
 		Wait(Exponential(0.5 MINUT));		//objednani se
