@@ -7,6 +7,7 @@
 
 PNAME = project
 PDOC = doc/manual.pdf
+PDOC_ATTACHEMENTS = doc/attachements/*
 PSOURCES = src/*.cpp
 PFLAGS = -lsimlib -lm
 
@@ -50,7 +51,7 @@ run:
 ANAME = 01_xbezde13_xdrahn00
 ATYPE = zip
 AFULLNAME = $(ANAME).$(ATYPE)
-AFILES = Makefile $(PDOC) $(PSOURCES)
+AFILES = Makefile $(PDOC) $(PSOURCES) ${PDOC_ATTACHEMENTS}
 
 zip:
 	zip $(AFULLNAME) $(AFILES)

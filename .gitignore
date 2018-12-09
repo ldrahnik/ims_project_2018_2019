@@ -1,6 +1,7 @@
 *.out
 .idea/*
 project
+*.zip
 
 # CLion
 CMakeLists.txt
