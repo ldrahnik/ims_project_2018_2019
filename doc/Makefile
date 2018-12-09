@@ -1,8 +1,8 @@
 doc.dvi: manual.tex Makefile local.bib
-	latex $<
+	pdftex $<
 	bibtex manual
-	latex $<
-	latex $<
+	pdftex $<
+	pdftex $<
 
 %.ps: %.dvi
 	dvips -f -t a4 $< > $@
@@ -11,4 +11,4 @@ doc.dvi: manual.tex Makefile local.bib
 	ps2pdf14 -sPAPERSIZE=letter $<
 
 clean:
-	rm -f *.aux *.dvi *.log *.blg *.bbl *.pdf *.ps
+	rm -f *.aux *.dvi *.log *.blg *.bbl *.pdf *.ps *.toc
