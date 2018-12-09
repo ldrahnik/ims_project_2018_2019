@@ -63,6 +63,7 @@ unsigned long objednan = 0;
 unsigned long stali = 0;
 unsigned long stal_obj = 0;
 unsigned long test = 0;
+double naplnena_kapacita = 0;
 
 class Siesta : public Process
 {
@@ -124,6 +125,10 @@ hovor:
 				goto vystup;
 		}
 
+		if(Kapacita_registraci.Full() && (naplnena_kapacita == 0))
+		{
+			naplnena_kapacita = Time - StartTime;
+		}
 zakrok:
 		begin_time = Time;
 		pred_zakrokem++;
@@ -307,6 +312,7 @@ int main(int argc, char *argv[])
 	Print("Test: %d\n", test);
 	Print("Objednani stali pacienti: %d\n", stal_obj);
 	Print("Neobjednan stali pacienti: %d\n", neobjednan);
+	Print("Naplneni kapacity registraci: %f dni\n", naplnena_kapacita/24);
 
 	cekarna_rtg.Output();
 	cekarna_zakrok.Output();
