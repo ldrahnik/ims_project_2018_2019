@@ -66,7 +66,7 @@ class Siesta : public Process
 {
 	void Behavior()
 	{
-		Wait(Exponential(0.08333333));
+		Wait(Exponential(5 MINUT));
 		Leave(Zubari, 1);
 		this->Terminate();
 	}
