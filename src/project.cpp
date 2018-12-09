@@ -29,7 +29,7 @@
 
 #define KAPACITA_NAVSTEV 1000
 
-#define NOVY_PACIENT 8
+#define NOVY_PACIENT 24
 
 #define RUNTIME 10
 
