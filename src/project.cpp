@@ -29,7 +29,7 @@
 
 #define KAPACITA_NAVSTEV 1000
 
-#define NOVY_PACIENT 8
+#define NOVY_PACIENT 48
 
 #define RUNTIME 10
 
@@ -43,6 +43,7 @@ Facility Rentgen("Rentgen");
 
 Histogram cekarna_rtg("Pacient ceka na rentgen", 0, 5, 20);
 Histogram cekarna_zakrok("Pacient ceka na zakrok", 0, 5, 20);
+Histogram sestr("Sledovani sestricek", 0, 5, 20);
 
 unsigned long novy_pacient = NOVY_PACIENT;
 
@@ -60,7 +61,8 @@ unsigned long hned_neobjednani = 0;
 unsigned long neobjednan = 0;
 unsigned long objednan = 0;
 unsigned long stali = 0;
-unsigned long neprisel = 0;
+unsigned long stal_obj = 0;
+unsigned long test = 0;
 
 class Siesta : public Process
 {
@@ -77,75 +79,78 @@ class Vstup : public Process
 	void Behavior()
 	{
 		double begin_time;
-		double start = Time;
 		double rand = 0;
+		double start;
 		novy++;
 
 hovor:
 
+		start=Time;
 		Enter(Sestricky, 1);
-
-		Wait(Exponential(0.03333333));
+		Wait(Exponential(2 MINUT));
 		Leave(Sestricky, 1);
+		sestr((Time-start)*60);
 
 		if(!Kapacita_registraci.Full())
 		{
 			Enter(Kapacita_registraci, 1);
 			prijmuti++;
-			Wait(Exponential(2160));
-			Leave(Kapacita_registraci, 1);
+			Wait(Exponential(90 DEN));
 
 			if(Random() > 0.15)
 			{
 				begin_time = Time;
 				v_cekarne++;
-				Enter(Sestricky, 1);
+				start=Time;
 				Seize(Rentgen);
+				Enter(Sestricky, 1);
 				cekarna_rtg((Time - begin_time)*60);
-				Wait(Exponential(0.25));
+				Wait(Exponential(15 MINUT));
 				Release(Rentgen);
 				Leave(Sestricky, 1);
-				Wait(Exponential(0.58333333));
+				sestr((Time-start)*60);
+
+				Wait(Exponential(35 MINUT));
 			}
 			else
 			{
+				Leave(Kapacita_registraci, 1);
 				goto vystup;
 			}
 		}
 		else
 		{
 			odmitnut++;
-			if(Random() > 0.5)
-			{
-				Wait(Exponential(120));
-				goto hovor;
-			}
-			else
 				goto vystup;
 		}
 
 zakrok:
 		begin_time = Time;
 		pred_zakrokem++;
-		Enter(Sestricky, 1);
+		start =Time;
 		Enter(Kresla, 1);
+		Enter(Sestricky, 1);
+		Wait(Exponential(5 MINUT));
 		cekarna_zakrok((Time - begin_time)*60);
 		rand = Random();
 
 		if(rand < 0.2)
 		{
 			Enter(Zubari, 1);
+			double st = Time;
 			Enter(Sestricky, 1);
 			tezky_zakrok++;
-			Wait(Exponential(0.83333333));
+			Wait(Exponential(90 MINUT));
 			Leave(Kresla, 1);
 			Leave(Sestricky, 1);
+			sestr((Time-start)*60);
+
 		}
 		else if(rand < 0.5)
 		{
 			Enter(Zubari, 1);
 			prohlidka++;
-			Wait(Exponential(0.33333333));
+			Wait(Exponential(20 MINUT));
 			Leave(Kresla, 1);
 			(new Siesta)->Activate();
 			goto bez_placeni;
@@ -154,47 +159,54 @@ zakrok:
 		{
 			Enter(Zubari, 1);
 			lehky_zakrok++;
-			Wait(Exponential(0.5));
+			Wait(Exponential(30 MINUT));
 			Leave(Kresla, 1);
 		}
 		(new Siesta)->Activate();
 
-		Wait(Exponential(0.08333333));
+		Wait(Exponential(5 MINUT));
 bez_placeni:
-		Wait(Exponential(0.08333333));
 		if(Random() < 0.2)
 		{
 			hned_neobjednani++;
 			Leave(Sestricky, 1);
+			sestr((Time-start)*60);
+
 			stali++;
 		}
 		else
 		{
 			Enter(Kapacita_navstev, 1);
 			hned_objednani++;
-			Wait(Exponential(0.16666667));
+			Wait(Exponential(10 MINUT));
 			Leave(Sestricky, 1);
+			sestr((Time-start)*60);
+
 			goto ceka_termin;
 		}
 		if(Random() < 0.005)
 			goto vystup;
-		Wait(Exponential(2190));
+		Wait(Exponential(6 MESIC));
+
 objednava_se:
+		stal_obj++;
+		start = Time;
 		Enter(Sestricky, 1);
-		Wait(Exponential(0.00833333));
+		Wait(Exponential(0.5 MINUT));
 		Leave(Sestricky, 1);
+		sestr((Time-start)*60);
 
 		if(!Kapacita_navstev.Full())
 		{
 			objednan++;
 			Enter(Kapacita_navstev, 1);
 ceka_termin:
-			Wait(Exponential(2160));
+			Wait(Exponential(90 DEN));
 			Leave(Kapacita_navstev, 1);
 			rand = Random();
 			if(rand < 0.01)
 				goto vystup;
-			else if(rand < 0.09)
+			else if(rand < 0.10)
 				goto objednava_se;
 			else
 				goto zakrok;
@@ -207,7 +219,7 @@ ceka_termin:
 				goto vystup;
 			else
 			{
-				Wait(Exponential(120));
+				Wait(Exponential(5 DEN));
 				goto objednava_se;
 			}
 		}
@@ -287,9 +299,14 @@ int main(int argc, char *argv[])
 	Run();
 
 	Print("Runtime: %d\n", runtime);
-	Print("Novych Pacientu: %d\n", novy);
+	Print("Novi Pacienti: %d\n", novy);
+	Print("Prijmuti pacienti na registraci: %d\n", prijmuti);
+	Print("Odmitnuti pacienti na registraci: %d\n", odmitnut);
 	Print("V cekarne na rtg: %d\n", v_cekarne);
 	Print("V cekarne na zakrok: %d\n", pred_zakrokem);
+	Print("Test: %d\n", test);
+	Print("Objednani stali pacienti: %d\n", stal_obj);
+	Print("Neobjednan stali pacienti: %d\n", neobjednan);
 
 	cekarna_rtg.Output();
 	cekarna_zakrok.Output();
@@ -299,6 +316,8 @@ int main(int argc, char *argv[])
 	Kresla.Output();
 	Kapacita_registraci.Output();
 	Kapacita_navstev.Output();
+
+	sestr.Output();
 
 	return EXIT_SUCCESS;
 }
