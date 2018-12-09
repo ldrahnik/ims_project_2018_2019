@@ -1,8 +1,8 @@
 doc.dvi: manual.tex Makefile local.bib
-	pdftex $<
+	latex $<
 	bibtex manual
-	pdftex $<
-	pdftex $<
+	latex $<
+	latex $<
 
 %.ps: %.dvi
 	dvips -f -t a4 $< > $@

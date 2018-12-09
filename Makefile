@@ -35,7 +35,7 @@ run:
 	# experiment 1: 2 sestřičky, 1 zubař, 1 křeslo
 	./project -s 2 -z 1 -k 1 -t 5 -r 100 -n 100 -i 24 -o experiment1.out # TODO: vhodná kapacita
 
- 	# experiment 2: 2 sestřičky, 2 zubaři, 1 křeslo
+ 	# experiment 2: 2 sestřičky, 2 zubaři, 2 křesla
 	./project -s 2 -z 2 -k 1 -t 5 -r 100 -n 100 -i 24 -o experiment2.out # TODO: vhodná kapacita
 
 	# experiment 3: 2 sestřičky, 2 zubaři, 2 křesla
