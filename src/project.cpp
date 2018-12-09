@@ -95,6 +95,10 @@ hovor:
 		{
 			Enter(Kapacita_registraci, 1);
 			prijmuta_registrace++;
+			
+			if(Kapacita_registraci.Full() && (naplnena_kapacita == 0))		//zaznamenaci casu zaplneni kapacity registrace
+				naplnena_kapacita = Time - StartTime;
+
 			Wait(Exponential(90 DEN));		//cekani na termin
 
 			if(Random() > 0.15)
@@ -122,11 +126,6 @@ hovor:
 		{
 			odmitnuta_registrace++;
 			goto vystup;
-		}
-
-		if(Kapacita_registraci.Full() && (naplnena_kapacita == 0))		//zaznamenaci casu zaplneni kapacity registrace
-		{
-			naplnena_kapacita = Time - StartTime;
 		}
 
 zakrok:
