@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt,titlepage]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[czech]{babel}
@@ -10,37 +10,91 @@
 
 \begin{document}
 
-\begin{center}
-\textsc{\Huge Fakulta informačních technologií\\
-Vysoké učení technické v~Brně\\}
 
-\LARGE \title{Modelování a simulace\\}
-\textbf{1. Služby, infrastruktura a energetika}
+\begin{titlepage}
+	
+	\begin{center}
+		{\Huge\textsc{Vysoké učení technické v~Brně}}\\
+		\medskip
+		{\huge\textsc{Fakulta informačních technologií}}\\
+		\vspace{\stretch{0.382}}
+		{\huge Téma 1: Stomatologická ordinace}\\
+		\medskip
+		{\LARGE Technická zpráva k projektu do předmětu IMS}\\
+		\vspace{\stretch{0.618}}
+	\end{center}
+	
+	Ladislav Bezděčík xbezdec13@stud.fit.vutbr.cz \hfill{} 
 
-\hfill \author{Ladislav Bezděčík xbezdec13@stud.fit.vutbr.cz\\
- Drahník Lukáš xdrahn00@stud.fit.vutbr.cz}
-\end{center}
-
-{\let\newpage\relax\maketitle}
-
-\newpage
-
-\section*{Obsah}
-\begin{itemize}
-  \item Úvod
-  \item Závěr
-  \item Použitá literatura
-\end{itemize}
+	Drahník Lukáš xdrahn00@stud.fit.vutbr.cz \hfill{Brno, \today}
+	
+\end{titlepage}
 
 \newpage
 
-\section*{Úvod}
-...
+\tableofcontents
 
-\section*{Závěr}
-...
+\newpage
 
-\subsection{Použitá literatura}
+\section{Úvod}
+
+Práce se zabývá simulací (viz. \cite{ims}, slajd 8) modelu (viz. \cite{ims}, slajd 7) stomatologické ordinace. Na základě modelu a simulačních experimentů jsou hledány optimální hranice pro nově příchozí a stávající klienty a to pro specifický počet zaměstnanců ordinace. 
+\newline
+Smyslem projektu je demonstrovat zvládnutelné kapacity pro jednotlivá složení ordinace tak, aby nalezené výsledky umožňovaly řízení náboru nových zaměstnanců při potřebě navýšit počet klientů buď při řešení krizové situace z důvodu nedostatku stomatologických pracovišť v okolí nebo plánovaného rozšiřování popřípadě vzniku nového stomatologického pracoviště a reagování na očekávanou poptávku. 
+\newline
+Práce vznikla jako projekt do předmětu Modelování a simulace. 
+
+\subsection{Řešitelé}
+
+Na projektu se podíleli Lukáš Drahník a Ladislav Bezděčík. Při tvorbě byly čerpány informace z výukových materiálů k předmětu IMS, z ročenek z webových stránek České stomatologické komory \cite{ceskastomatologickakomorarocenky} a informací z pracoviště Ortodoncie a Stomatologie s.r.o. Jindřichův Hradec \cite{soldanova} a MDDr. Lukáš Novák, s.r.o. Jihlava \cite{lukasnovak}.
+
+\subsection{Ověřování validity modelu}
+Z množství získaných informací byly ponechány shodné a vytvořen obecný abstraktní model (viz. \cite{ims}, slajd 42-45) nepopisující žádné konkrétní pracoviště v celé jeho šíři. Každé pracoviště je unikát a procesy na pracovišti přizpůsobuje svému oboru působnosti, možnostem a také spektru svých klientů.
+\newline
+Validita (viz. \cite{ims}, slajd 37) navrhovaného modelu byla průběžně experimentálně ověřována. Toto ověřování bylo prováděno srovnávaním výstupů simulace s informacemi poskytnutými Českou stomatologickou komorou \cite{ceskastomatologickakomorarocenky} a konkrétními pracovišti viz. \cite{lukasnovak} a \cite{soldanova} a v neposlední řadě ze zkušeností v pozici klienta nejenom na již zmíněných pracovištích. Z důvodu unikátnosti každého pracoviště se předpokládá, že vypracování projektu na základě zakázky by validita modelu byla ověřována pro danou jednu konkrétní ordinaci dokud by experimenty plně neodpovídaly poskytnutým datům z jejího předchozího fungování.
+
+\section{Rozbor tématu a použitých metod/technologií}
+
+Při modelování (viz. \cite{ims}, slajd 8) stomatologické ordinace jsme postupovali z následujících předpokladů. Zaměstnanci jsou na pracovišti rozděleni na sestry a zubaře. Vyhnuli jsme se použití sekretářky z důvodu splnění vybraného zadání, kterým je stomatologická ordinace nikoliv stomatologické centrum. Dále jsme do systému uvedli počet křesel a rentgen, který se používá při vstupní prohlídce.
+\newline
+Sestřičky mají za úkol vyřizovat hovory s novými pacienty, se stávajícími pacienty, obsluhovat při vstupní prohlídce rentgen, pacienta připravit na volné křeslo pro zubaře, asistovat zubaři při pravidelné kontrole a lehkém zákroku při počtu 1 sester a těžkém zákroku při počtu 2 sester, kdy druhá se neúčastní nachystání pacienta a posléze placení, ale asistuje pouze na zákrok.
+\newline
+Zubaři se věnují pacientovi pouze na křesle a to při pravidelné kontrole, lehkému zákroku a těžkému zákroku. Po každém pacientovi mají čas na uklidnění pro sebe a to nejméně na dobu trvající připravení nového pacienta sestřičkou.
+\newline
+Každá ordinace má hranicí pacientů, které může reálně zvládnout. V systému jako kapacita registrací. Také je potřeba znát kapacitu plánovaných návštěv pro dlouhodobě udržitelný chod ordinace při udržení kvality poskytující péče.
+\newline
+Pacienti se stejně jako se stávají z nových pacientů stávajícími tak se ze stávajících bývalými. Je větší pravděpodobnost, že se tak stane při krátké spolupráci, případně vůbec před začátkem spolupráce než po několikaleté. 
+\newline
+Největší riziko ztráty nového pacienta je při objednání se na vstupní prohlídku na kterou část také vůbec nepřijde. 
+\newline
+U stávajícího pacienta je větší šance na ztrátu klienta při nenabídnutí termínu objednání z důvodu nedostatečné kapacity než bez ničího přičinění, např. stěhování, smrt atp. Také je zde riziko, že klient nepřijde na domluvený termín, přičemž většina se přeobjedná, část se již nikdy neozve.
+
+\subsection{Použité postupy pro vytváření modelu}
+
+Byl použit jazyk C++ společně s knihovnou SIMLIB \cite{simlib}, která splňovala veškerá naše očekávaní kladená zadáním a která se potvrdila použitím knihovny při vypracování. Při vypracování bylo čerpáno z prvního demonstračního cvičení \cite{dem01}, druhého demonstračního cvičení\cite{dem02} a semináři o projektech \cite{seminar} k předmětu IMS.
+
+
+\section{Konceptuální model}
+
+
+
+\subsection{Návrh}
+\subsection{Zdroje informací}
+\subsection{Validita}
+\subsection{Petriho síť}
+\section{Simulační model}
+\subsection{Návrh}
+\section{Experimenty}
+\subsection{Stanovené cíle pro experimenty a způsob jejich dosažení}
+\subsection{Jednotlivé experimenty}
+\subsubsection{Experiment 1}
+\subsubsection{Experiment 2}
+\subsubsection{Experiment 3}
+\subsubsection{Experiment 4}
+\subsection{Závěry plynoucí z experimentů}
+\section{Závěr}
+
+\newpage
 
 \nocite{*}
 
