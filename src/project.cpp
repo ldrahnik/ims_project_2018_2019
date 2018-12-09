@@ -191,7 +191,7 @@ bez_placeni:
 		Wait(Exponential(6 MESIC));		//doba nez se stavajici pacient opet objedna
 
 objednava_se:
-		
+
 		start_sestricka = Time;
 		Enter(Sestricky, 1);
 		Wait(Exponential(0.5 MINUT));		//objednani se
@@ -310,10 +310,10 @@ int main(int argc, char *argv[])
 	Print("Objednani stali pacienti: %d\n", objednan);
 	Print("Neobjednan stali pacienti: %d\n", neobjednan);
 	Print("Naplneni kapacity registraci: %f dni\n", naplnena_kapacita/24);
-	Print("Pacienti na lehkem zakroku: %d\n"), lehky_zakrok;
-	Print("Pacienti na tezkem zakroku: %d\n"), tezky_zakrok;
-	Print("Pacienti na prohlidce: %d\n"), prohlidka;
-	Print("Pacienti vystoupeni ze systemu: %d\n"), vystoupeny;
+	Print("Pacienti na lehkem zakroku: %d\n", lehky_zakrok);
+	Print("Pacienti na tezkem zakroku: %d\n", tezky_zakrok);
+	Print("Pacienti na prohlidce: %d\n", prohlidka);
+	Print("Pacienti vystoupeni ze systemu: %d\n", vystoupeny);
 
 	cekarna_rtg_time.Output();
 	cekarna_zakrok_time.Output();
