@@ -60,9 +60,9 @@ Při modelování (viz. \cite{ims}, slajd 8) stomatologické ordinace jsme postu
 \newline
 Sestřičky mají za úkol vyřizovat hovory s novými pacienty, se stávajícími pacienty, obsluhovat při vstupní prohlídce rentgen, pacienta připravit na volné křeslo pro zubaře, asistovat zubaři při pravidelné kontrole a lehkém zákroku při počtu 1 sester a těžkém zákroku při počtu 2 sester, kdy druhá se neúčastní nachystání pacienta a posléze placení, ale asistuje pouze na zákrok.
 \newline
-Zubaři se věnují pacientovi pouze na křesle a to při pravidelné kontrole, lehkému zákroku a těžkému zákroku. Po každém pacientovi mají čas na uklidnění pro sebe a to nejméně na dobu trvající připravení nového pacienta sestřičkou. Je nutno podotknout, že doba trvání jednotlivých zákroků záleží na zkušenostech daného zubaře a asistující sestřičky.
+Zubaři se věnují pacientovi pouze na křesle a to při pravidelné kontrole, lehkém zákroku a těžkém zákroku. Po každém pacientovi mají čas na uklidnění pro sebe a to nejméně na dobu trvající připravení nového pacienta sestřičkou. Je nutno podotknout, že doba trvání jednotlivých zákroků záleží na zkušenostech daného zubaře a asistující sestřičky.
 \newline
-Každá ordinace má hranicí pacientů, které může reálně zvládnout. V systému jako kapacita registrací. Také je potřeba znát kapacitu plánovaných návštěv pro dlouhodobě udržitelný chod ordinace při udržení kvality poskytující péče.
+Každá ordinace má hranici pacientů, kterou může reálně zvládnout. V systému jako kapacita registrací. Také je potřeba znát kapacitu plánovaných návštěv pro dlouhodobě udržitelný chod ordinace při udržení kvality poskytující péče.
 \newline
 Pacienti se stejně jako se stávají z nových pacientů stávajícími tak se ze stávajících bývalými. Je větší pravděpodobnost, že se tak stane při krátké spolupráci, případně vůbec před začátkem spolupráce než po několikaleté. 
 \newline
@@ -77,7 +77,7 @@ Byl použit jazyk C++ společně s knihovnou SIMLIB \cite{simlib}, která splňo
 
 \section{Koncepce}
 
-Cílem projektu je simulovat stomatologickou ordinace s konkrétním cílem zkoumat udržitelný počet klintů. Byla zanedbána poruchovost rentgenu z důvodu vysoké spolehlivosti a poruchovost křesla z důvodu neovlivňování chodu ordinace. V případě času stráveném prováděním zákroků byla hodnota odhadnuta pro průměrného zubaře, protože dle rozložení pravděpodobnosti v získaných datem z ročenek \cite{ceskastomatologickakomorarocenky} je velký počet starších zubařů mezi 60-69, stejně jako velký počet mladých 20-34, v případě, že nerozlišujeme pohlaví.
+Cílem projektu je simulovat stomatologickou ordinace s konkrétním cílem zkoumat udržitelný počet klientů. Byla zanedbána poruchovost rentgenu z důvodu vysoké spolehlivosti a poruchovost křesla z důvodu neovlivňování chodu ordinace. V případě času stráveném prováděním zákroků byla hodnota odhadnuta pro průměrného zubaře, protože dle rozložení pravděpodobnosti v získaných datech z ročenek \cite{ceskastomatologickakomorarocenky} je velký počet starších zubařů mezi 60-69, stejně jako velký počet mladých 20-34, v případě, že nerozlišujeme pohlaví.
 
 \subsection{Formy konceptuálního modelu}
 
@@ -109,13 +109,13 @@ Experimenty bylo ověřováno, kolik pacientů zvládne daný počet zubařů, s
 
 \subsection{Postup experimentování}
 
-V každém z experimentů se budeme snažit nalézt hodnoty kapacit plánovaných návštěv a maximum možných registrací. Experimenty provádíme při běhu simulace po dobu 5-ti let.\newline
+V každém z experimentů se budeme snažit nalézt hodnoty kapacit plánovaných návštěv a maximum možných registrací. Experimenty provádíme při běhu simulace po dobu 5-ti let. Snažíme se prvně vyjít všem vstříc jak při registracích, tak při plánovaných návštěvách, kde ale kapacitu nebudeme zvyšovat nad 1200 (může být přibližně půl roku). Poté budeme sledovat vytíženost zubařů, sestřiček a křesla. \newline
 
- 1. nastavení doby na 5 let a postupně použijeme kombinace 1 nový pacient / den, 2, 4, 8
+ 1. nastavení doby simulace modelu při experimentu na 5 let a postupně použijeme kombinace exp(24), exp(12), exp(6),exp(3) pro nové pacienty
 
  2. nastavení počtu sestřiček, zubařů, křesel dle varianty experimentu
 
- 3. nastavení defaultní hodnoty pro kapacitu plánovaných návštěv a maximum možných registrací
+ 3. nastavení defaultní hodnoty pro kapacitu plánovaných návštěv a maximum možných registrací (100, 100)
 
  4. nastavení výstupního souboru rozdílného pro každý experiment
 
@@ -125,23 +125,21 @@ V každém z experimentů se budeme snažit nalézt hodnoty kapacit plánovanýc
 
  7. opakování od kroku 3. upravením hodnoty kapacitu plánovaných návštěv pokud je pravda něco z následujícího:
 
-	7.1 je příliš malá/velká vytíženost sestřiček
+	7.1 je příliš velká vytíženost sestřiček
 
-	7.2 je příliš malá/velká vytíženost zubařů
+	7.2 je příliš velká vytíženost zubařů
 
-	7.3 dost pacientů není objednáno z důvodu malé kapacity / kapacita je využívána minimálně
+	7.3 je příliš velká vytíženost křesla
 
-	7.4 čekací doba v čekárnách je příliš velká
-
-	7.5 stávající počet klientů je mnohem nižší než počet registrovaných
+	7.4 dost pacientů není objednáno z důvodu malé kapacity
 
  8. opakování od kroku 3. upravením hodnoty maxima možných registrací pokud je pravda něco z následujícího:
 
 	8.1 dost nových pacientů není objednáno z důvodu malé kapacity
 
-	8.2 stávající počet klientů je mnohem nižší než počet registrovaných
-
  9. při nalezení vhodných hodnot maxim začínáme od kroku 1. s upravenou hodnotou generování nových pacientů
+
+\newpage
 
 \subsection{Jednotlivé experimenty}
 \subsubsection{Experiment 1}
@@ -150,13 +148,13 @@ Experiment probíhá při nastavení hodnot na: 1 zubař, 2 sestřičky, 1 křes
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-Počet nových pacientů / 24 hodin & Maximum možných registrací & Kapacita plánovaných návštěv \\ \hline
-1        & 0                	& 0           		\\ \hline
-2       & 0          		& 0           		\\ \hline
-4       & 0   			& 0        		\\ \hline
-8       & 0   			& 0           		\\ \hline
+Noví pacienti (exp) & Maximum registrací &  Kapacita návštěv & Sestřičky & Zubaři & Křesla \\ \hline
+24       & 1800                	& 1100  & 0.1 & 0.05 & 0.05       	 \\ \hline
+12       & 3200        		& 1200  & 0.5 & 0.1 & 0.17             	 \\ \hline
+6        & 6300			& 1200  & 1.3 & 0.2 & 0.6     	 	 \\ \hline
+3        & 12500		& 1200  & 1.6 & 0.3 & 0.84       	 \\ \hline
 \end{tabular}
 \caption {Výsledné hodnoty pro experiment 1} \label{tab:title} 
 \end{table}
@@ -167,13 +165,13 @@ Experiment probíhá při nastavení hodnot na: 2 zubaři, 2 sestřičky, 2 kře
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-Počet nových pacientů / 24 hodin & Maximum možných registrací & Kapacita plánovaných návštěv \\ \hline
-1        & 0                	& 0           		\\ \hline
-2       & 0          		& 0           		\\ \hline
-4       & 0   			& 0        		\\ \hline
-8       & 0   			& 0           		\\ \hline
+Noví pacienti (exp) & Maximum registrací &  Kapacita návštěv & Sestřičky & Zubaři & Křesla \\ \hline
+24       & 300                	& 300  & 1.35 & 1.35 & 1.35       	 \\ \hline
+12       & 600        		& 500  & 0.18 & 0.15 & 0.16           	 \\ \hline
+6        & 1000			& 700  & 1.6 & 1.6 & 1.6     	 	 \\ \hline
+3        & 1600			& 900  & 1.8 & 1.7 & 1.7       	 \\ \hline
 \end{tabular}
 \caption {Výsledné hodnoty pro experiment 2} \label{tab:title} 
 \end{table}
@@ -184,56 +182,22 @@ Experiment probíhá při nastavení hodnot na: 2 zubaři, 3 sestřičky, 2 kře
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-Počet nových pacientů / 24 hodin & Maximum možných registrací & Kapacita plánovaných návštěv \\ \hline
-1        & 0                	& 0           		\\ \hline
-2       & 0          		& 0           		\\ \hline
-4       & 0   			& 0        		\\ \hline
-8       & 0   			& 0           		\\ \hline
+Noví pacienti (exp) & Maximum registrací &  Kapacita návštěv & Sestřičky & Zubaři & Křesla \\ \hline
+24       & 1600                	& 1100  & 0.05 & 0.1 & 0.05       	 \\ \hline
+12       & 3100        		& 1200  & 0.05 & 0.09 & 0.12           	 \\ \hline
+6        & 6300			& 1200  & 1.5 & 0.24 & 0.64    	 	 \\ \hline
+3        & 12500		& 1200  & 2.5 & 0.45 & 1.66       	 \\ \hline
 \end{tabular}
 \caption {Výsledné hodnoty pro experiment 3} \label{tab:title} 
 \end{table}
 
-\subsubsection{Experiment 4}
-
-Experiment probíhá při nastavení hodnot na: 3 zubaři, 3 sestřičky, 3 křesla.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Počet nových pacientů / 24 hodin & Maximum možných registrací & Kapacita plánovaných návštěv \\ \hline
-1        & 0                	& 0           		\\ \hline
-2       & 0          		& 0           		\\ \hline
-4       & 0   			& 0        		\\ \hline
-8       & 0   			& 0           		\\ \hline
-\end{tabular}
-\caption {Výsledné hodnoty pro experiment 4} \label{tab:title} 
-\end{table}
-
-\subsubsection{Experiment 5}
-
-Experiment probíhá při nastavení hodnot na: 3 zubaři, 5 sestřičky, 3 křesla.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-Počet nových pacientů / 24 hodin & Maximum možných registrací & Kapacita plánovaných návštěv \\ \hline
-1        & 0                	& 0           		\\ \hline
-2       & 0          		& 0           		\\ \hline
-4       & 0   			& 0        		\\ \hline
-8       & 0   			& 0           		\\ \hline
-\end{tabular}
-\caption {Výsledné hodnoty pro experiment 5} \label{tab:title} 
-\end{table}
-
 \subsection{Závěry experimentů}
 
-Celkem bylo provedeno 20 experimentů. Všechny experimenty byly zaměřeny na zjištění optimálního maxima možných registrací a kapacitu plánovaných návštěv pro konkrétní počet zaměstnanců. Z uvedených experimentů vyplynulo, že ...
+Celkem bylo provedeno 12 experimentů. Všechny experimenty byly zaměřeny na zjištění optimálního maxima možných registrací a kapacitu plánovaných návštěv pro konkrétní počet zaměstnanců. Z uvedených experimentů vyplynulo, že menší ordinace nemohou zvládat velký přísun nových pacientů i kdyby kvůli nim zvýšili maximální počet registrací, protože se o ně poté nebudou stíhat starat. Pokud ale chtějí alespoň zkusit tento nápor zvládnout, vyšlo z experimentů, že je mnohem výhodnější plánovat mnohem více dopředu, aby se zaplnila pokud možno veškerá kapacita z důvodu, že potřeby lidí se většinou nesejdou najednou a poté se hromadí právě z důvodu odmítání dání termínu a lidé volají za kratší dobu a začíná nekončící smyčka.
 \newline
-Výsledky a nalezená optimální maxima jsou dostupná v souboru Makefile pod příkazem make run a uloženy v nově vytvořených souborech experiment[1-5].out.
+Výsledky a nalezená optimální maxima jsou dostupná v souboru Makefile pod příkazem make run a uloženy v nově vytvořených souborech experiment[1.1-3.4].out.
 
 \section{Shrnutí simulačních experimentů a závěr}
 
