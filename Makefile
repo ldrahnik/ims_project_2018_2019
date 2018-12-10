@@ -31,7 +31,7 @@ $(PNAME): $(PSOURCES)
 
 ################# EXPERIMENTS #####################
 
-# exprimenty: 5 let, 1 nový pacient / den, hledáme vhodnou kapacitu registrací a návštěv
+# exprimenty: 5 let, hledáme vhodnou kapacitu registrací a návštěv při zvyšování generování pacientů
 run:
 	# experiment 1: 2 sestřičky, 1 zubař, 1 křeslo
 	./project -s 2 -z 1 -k 1 -t 5 -r 1800 -n 1100 -i 24 -o experiment1.1.out
