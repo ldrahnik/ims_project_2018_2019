@@ -1,6 +1,6 @@
 # Assessment 
 
-(x/20b)
+(20/20b)
 
 # SIMLIB
 
