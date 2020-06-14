@@ -9,10 +9,6 @@
 - make
 - sudo make install
 
-# Todo project:
-
-- ~~jak zprovoznit knihovnu simlib, hlavička "simlib.h" v projektu~~
-
 # Version: 
 
 1. Služby, infrastruktura a energetika
