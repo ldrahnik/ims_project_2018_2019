@@ -64,6 +64,12 @@ zip:
 rmzip:
 	rm -f $(AFULLNAME)
 
+unzip:
+	unzip $(AFULLNAME) -d $(ANAME)
+
+tree:
+	tree -a $(ANAME)
+
 ################# LATEX ###########################
 
 tex:
