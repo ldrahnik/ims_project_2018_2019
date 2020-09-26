@@ -6,6 +6,8 @@ ASSESSMENT
 Modelování a simulace: Stomatologická ordinace
 ==========
 
+![ScreenShot](https://raw.github.com/ldrahnik/ims_project_2018_2019/master/doc/attachements/petri_nets.png)
+
 ## Příklad spuštění:
 
 ```
